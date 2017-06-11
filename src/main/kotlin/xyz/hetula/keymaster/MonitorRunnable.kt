@@ -81,18 +81,22 @@ class MonitorRunnable(private val device: String, private val dataIn: DataInputS
     }
 
     private fun toRawInput(buffer: ByteArray): RawInput {
+        val valueBuffer = buffer.copyOfRange(20, 24)
+        valueBuffer.reverse()
         return RawInput(
                 getTimeVal(buffer),
                 ByteBuffer.wrap(buffer, 15, 2).short.toInt(),
                 ByteBuffer.wrap(buffer, 17, 2).short.toInt(),
-                ByteBuffer.wrap(buffer.copyOfRange(20, 24).reversedArray(), 0, 4).int
+                ByteBuffer.wrap(valueBuffer, 0, 4).int
         )
     }
 
     private fun getTimeVal(buffer: ByteArray): TimeVal {
+        val timeBuffer = buffer.copyOfRange(0, 16)
+        timeBuffer.reverse()
         return TimeVal(
-                ByteBuffer.wrap(buffer, 0, 8).long,
-                ByteBuffer.wrap(buffer, 8, 8).long
+                ByteBuffer.wrap(timeBuffer, 8, 8).long,
+                ByteBuffer.wrap(timeBuffer, 4, 4).int
         )
     }
 }

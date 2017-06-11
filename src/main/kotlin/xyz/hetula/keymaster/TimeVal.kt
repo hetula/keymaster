@@ -24,8 +24,16 @@
 
 package xyz.hetula.keymaster
 
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.ZoneOffset
+
 /**
  * @author Tuomo Heino
  * @version 11.6.2017.
  */
-data class TimeVal(val seconds: Long, val microSeconds: Long)
+data class TimeVal(val seconds: Long, val microSeconds: Int) {
+    fun toLocalTime(): LocalTime {
+        return LocalDateTime.ofEpochSecond(seconds, microSeconds * 1000, ZoneOffset.UTC).toLocalTime()
+    }
+}

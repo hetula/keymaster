@@ -86,7 +86,9 @@ object KeyMaster {
     }
 
     private fun createMonitor(device: String, dataIn: DataInputStream): MonitorRunnable {
-        println("Creating monitor: $device")
+        if(printSystemOuts) {
+            println("Creating monitor: $device")
+        }
         val monitor = MonitorRunnable(device, dataIn, { inputQueue.add(it) })
         runners.add(monitor)
         return monitor
@@ -114,7 +116,7 @@ object KeyMaster {
 
 fun main(args: Array<String>) {
     KeyMaster.initialize()
-    KeyMaster.registerInputListener { println(it) }
+    KeyMaster.registerInputListener { println(it); println(it.timestamp.toLocalTime()) }
     DeviceManager.readDevices().forEach(::monitorDevice)
     println("Testing for 10 seconds!")
     Thread.sleep(10000)
